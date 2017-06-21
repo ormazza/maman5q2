@@ -13,19 +13,20 @@ public  class ChopStick {
 
     public boolean pickUp(Philosopher who, String where) throws InterruptedException {
         if (up.tryLock(10, TimeUnit.MILLISECONDS)) {
-            System.out.println(who + " picked up " + where + " " + this);
+            Main.mat.chopUse[id].setEatTaken(true);
+            Main.mat.repaint();
             return true;
         }
         return false;
     }
 
-    public void putDown(Philosopher who, String name) {
-        up.unlock();
-        System.out.println(who + " put down " + name + " " + this);
+    public int getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        return "Chopstick-" + id;
+    public void putDown(Philosopher who, String name) {
+        up.unlock();
+        Main.mat.chopUse[id].setEatTaken(false);
+        Main.mat.repaint();
     }
 }

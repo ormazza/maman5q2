@@ -3,42 +3,42 @@ package com.company;
 import java.util.Random;
 
 public class Philosopher implements Runnable {
-    // Which one I am.
     private final int id;
-    // The chopsticks on either side of me.
-    private final ChopStick leftChopStick;
-    private final ChopStick rightChopStick;
-    // Am I full?
-    volatile boolean isTummyFull = false;
-    // To randomize eat/Think time
+    private final ChopStick larghIdChop;
+    private final ChopStick smallIdChop;
     private Random randomGenerator = new Random();
-    // Number of times I was able to eat.
-    private int noOfTurnsToEat = 0;
 
 
     public Philosopher(int id, ChopStick leftChopStick, ChopStick rightChopStick) {
         this.id = id;
-        this.leftChopStick = leftChopStick;
-        this.rightChopStick = rightChopStick;
+        if(leftChopStick.getId()>rightChopStick.getId()){
+            this.larghIdChop = leftChopStick;
+            this.smallIdChop = rightChopStick;
+        }
+        else {
+            this.larghIdChop = rightChopStick;
+            this.smallIdChop = leftChopStick;
+        }
     }
 
     @Override
     public void run() {
 
         try {
-            while (!isTummyFull) {
+            while (true){
                 // Think for a bit.
                 think();
                 // Make the mechanism obvious.
-                if (leftChopStick.pickUp(this, "left")) {
-                    if (rightChopStick.pickUp(this, "right")) {
+
+                if (smallIdChop.pickUp(this, "left")) {
+                    if (larghIdChop.pickUp(this, "right")) {
                         // Eat some.
                         eat();
                         // Finished.
-                        rightChopStick.putDown(this, "right");
+                        larghIdChop.putDown(this, "right");
                     }
                     // Finished.
-                    leftChopStick.putDown(this, "left");
+                    smallIdChop.putDown(this, "left");
                 }
             }
         } catch (Exception e) {
@@ -48,23 +48,14 @@ public class Philosopher implements Runnable {
     }
 
     private void think() throws InterruptedException {
-        System.out.println(this + " is thinking");
-        Thread.sleep(randomGenerator.nextInt(1000));
+        Thread.sleep(1000+randomGenerator.nextInt(2500));
     }
 
     private void eat() throws InterruptedException {
-        System.out.println(this + " is eating");
-        noOfTurnsToEat++;
-        Thread.sleep(randomGenerator.nextInt(1000));
-    }
-
-    // Accessors at the end.
-    public int getNoOfTurnsToEat() {
-        return noOfTurnsToEat;
-    }
-
-    @Override
-    public String toString() {
-        return "Philosopher-" + id;
+        Matrix.philoEat[id].setEatTaken(true);
+        Main.mat.repaint();
+        Thread.sleep(1000+randomGenerator.nextInt(2500));
+        Matrix.philoEat[id].setEatTaken(false);
+        Main.mat.repaint();
     }
 }
