@@ -4,25 +4,25 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 public class ChopStick {
+    boolean taken ;
     Lock up = new ReentrantLock();
     private final int id;
 
     public ChopStick(int id) {
+        taken = false;
         this.id = id;
     }
 
-    public boolean pickUp() {
-        if (up.tryLock()) {
+    public void pickUp() {
+            taken = true;
             Main.mat.chopUse[id].setEatTaken(true);
             Main.mat.repaint();
-            return true;
-        }
-        return false;
+
     }
 
 
     public void putDown() {
-        up.unlock();
+        taken = false;
         Main.mat.chopUse[id].setEatTaken(false);
         Main.mat.repaint();
     }
@@ -30,5 +30,7 @@ public class ChopStick {
     public int getId() {
         return id;
     }
+
+
 
 }
