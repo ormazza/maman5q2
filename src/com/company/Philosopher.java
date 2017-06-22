@@ -29,9 +29,9 @@ public class Philosopher implements Runnable {
                 think();
                 synchronized (smallIdChop) {
                     smallIdChop.pickUp();
-                    if(largeIdChop.taken){
+                    while(largeIdChop.taken){
                         smallIdChop.putDown();
-                        smallIdChop.notifyAll();
+                        smallIdChop.notify();
                         smallIdChop.wait();
                         smallIdChop.pickUp();
                     }
@@ -39,10 +39,10 @@ public class Philosopher implements Runnable {
                         largeIdChop.pickUp();
                         eat();
                         largeIdChop.putDown();
-                        largeIdChop.notifyAll();
+                        largeIdChop.notify();
                     }
                     smallIdChop.putDown();
-                    smallIdChop.notifyAll();
+                    smallIdChop.notify();
                 }
 
             }
