@@ -1,11 +1,6 @@
 package com.company;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.*;
-
 public class ChopStick {
-    boolean taken ;
-    Lock up = new ReentrantLock();
+    private boolean taken ;
     private final int id;
 
     public ChopStick(int id) {
@@ -25,6 +20,10 @@ public class ChopStick {
         taken = false;
         Main.mat.chopUse[id].setEatTaken(false);
         Main.mat.repaint();
+    }
+
+    public boolean isTaken() {
+        return taken;
     }
 
     public int getId() {

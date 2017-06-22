@@ -29,7 +29,7 @@ public class Philosopher implements Runnable {
                 think();
                 synchronized (smallIdChop) {
                     smallIdChop.pickUp();
-                    while(largeIdChop.taken){
+                    while(largeIdChop.isTaken()){
                         smallIdChop.putDown();
                         smallIdChop.notify();
                         smallIdChop.wait();
