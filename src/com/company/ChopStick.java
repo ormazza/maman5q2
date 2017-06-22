@@ -1,18 +1,18 @@
 package com.company;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
-public  class ChopStick {
-    // Make sure only one philosopher can have me at any time.
+
+public class ChopStick {
     Lock up = new ReentrantLock();
-    // Who I am.
     private final int id;
 
     public ChopStick(int id) {
         this.id = id;
     }
 
-    public boolean pickUp(Philosopher who, String where) throws InterruptedException {
-        if (up.tryLock(10, TimeUnit.MILLISECONDS)) {
+    public boolean pickUp() {
+        if (up.tryLock()) {
             Main.mat.chopUse[id].setEatTaken(true);
             Main.mat.repaint();
             return true;
@@ -20,13 +20,15 @@ public  class ChopStick {
         return false;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void putDown(Philosopher who, String name) {
+    public void putDown() {
         up.unlock();
         Main.mat.chopUse[id].setEatTaken(false);
         Main.mat.repaint();
     }
+
+    public int getId() {
+        return id;
+    }
+
 }

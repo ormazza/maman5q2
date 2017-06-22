@@ -7,8 +7,8 @@ public class Matrix extends JPanel {
     private boolean[][] mat;
     private static final int SIZE = 70;
     private static final int SIZE_CUBE = 80;
-    public static Index[] philoEat;
-    public static Index[] chopUse;
+    public static Index[] philoEat; //represent the state and the location of each philosopher on the matrix
+    public static Index[] chopUse; // represent the state ans the location of each chop stick on the matrix
 
     public Matrix() {
     philoEat = new Index[]{new Index(2, 0),new Index(4, 2),new Index(3, 4),new Index(1, 4),new Index(0, 2)};

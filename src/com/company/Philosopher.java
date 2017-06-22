@@ -4,7 +4,9 @@ import java.util.Random;
 
 public class Philosopher implements Runnable {
     private final int id;
-    private final ChopStick larghIdChop;
+    private static final int MIN_TIME_TO_EAT = 1000;
+    private static final int MAX_TIME_TO_EAT = 3500;
+    private final ChopStick largeIdChop;
     private final ChopStick smallIdChop;
     private Random randomGenerator = new Random();
 
@@ -12,49 +14,41 @@ public class Philosopher implements Runnable {
     public Philosopher(int id, ChopStick leftChopStick, ChopStick rightChopStick) {
         this.id = id;
         if(leftChopStick.getId()>rightChopStick.getId()){
-            this.larghIdChop = leftChopStick;
+            this.largeIdChop = leftChopStick;
             this.smallIdChop = rightChopStick;
         }
         else {
-            this.larghIdChop = rightChopStick;
+            this.largeIdChop = rightChopStick;
             this.smallIdChop = leftChopStick;
         }
     }
 
     @Override
     public void run() {
-
         try {
             while (true){
-                // Think for a bit.
                 think();
-                // Make the mechanism obvious.
-
-                if (smallIdChop.pickUp(this, "left")) {
-                    if (larghIdChop.pickUp(this, "right")) {
-                        // Eat some.
+                if (smallIdChop.pickUp()) {
+                    if (largeIdChop.pickUp()) {
                         eat();
-                        // Finished.
-                        larghIdChop.putDown(this, "right");
+                        largeIdChop.putDown();
                     }
-                    // Finished.
-                    smallIdChop.putDown(this, "left");
+                    smallIdChop.putDown();
                 }
             }
         } catch (Exception e) {
-            // Catch the exception outside the loop.
             e.printStackTrace();
         }
     }
 
     private void think() throws InterruptedException {
-        Thread.sleep(1000+randomGenerator.nextInt(2500));
+        Thread.sleep(MIN_TIME_TO_EAT+randomGenerator.nextInt(MAX_TIME_TO_EAT-MIN_TIME_TO_EAT));
     }
 
     private void eat() throws InterruptedException {
         Matrix.philoEat[id].setEatTaken(true);
         Main.mat.repaint();
-        Thread.sleep(1000+randomGenerator.nextInt(2500));
+        Thread.sleep(MIN_TIME_TO_EAT+randomGenerator.nextInt(MAX_TIME_TO_EAT-MIN_TIME_TO_EAT));
         Matrix.philoEat[id].setEatTaken(false);
         Main.mat.repaint();
     }
